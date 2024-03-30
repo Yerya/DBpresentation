@@ -13,10 +13,24 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-app.post("/redis", async (req, res) => {
-  const { key, value } = req.body;
-  await redis.set(key, value);
-  res.json({ message: "Успешно сохранено в Redis" });
+// Массив для хранения отзывов
+let reviews = [];
+
+app.post("/review", async (req, res) => {
+  const { name, review } = req.body;
+  // Сохраняем отзыв в Redis
+  await redis.rpush("reviews", JSON.stringify({ name, review }));
+  // Добавляем отзыв в массив для быстрого доступа
+  reviews.push({ name, review });
+  res.json({ message: "Отзыв успешно сохранен" });
+});
+
+app.get("/reviews", async (req, res) => {
+  // Получаем все отзывы из Redis
+  const redisReviews = await redis.lrange("reviews", 0, -1);
+  // Преобразуем данные из Redis в объекты JavaScript
+  const parsedReviews = redisReviews.map((review) => JSON.parse(review));
+  res.json(parsedReviews);
 });
 
 app.listen(3001, () => {

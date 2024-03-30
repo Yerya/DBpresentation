@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function RedisForm() {
-  const [key, setKey] = useState("");
-  const [value, setValue] = useState("");
+function RedisForm({ onReviewSubmit }) {
+  const [name, setName] = useState("");
+  const [review, setReview] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/redis", {
-        key,
-        value,
+      await axios.post("http://localhost:3001/review", {
+        name,
+        review,
       });
-      console.log(response.data); // Ответ от сервера Redis
+      onReviewSubmit(); // Обновляем отзывы после отправки
     } catch (error) {
       console.error("Ошибка:", error);
     }
@@ -21,24 +21,24 @@ function RedisForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="key">Ключ:</label>
+        <label htmlFor="name">Имя:</label>
         <input
           type="text"
-          id="key"
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="value">Значение:</label>
+        <label htmlFor="review">Отзыв:</label>
         <input
           type="text"
-          id="value"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          id="review"
+          value={review}
+          onChange={(e) => setReview(e.target.value)}
         />
       </div>
-      <button type="submit">Отправить</button>
+      <button type="submit">Отправить отзыв</button>
     </form>
   );
 }
