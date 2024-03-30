@@ -7,12 +7,18 @@ function RedisForm({ onReviewSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!name || !review) {
+      alert("Пожалуйста, заполните все поля");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:3001/review", {
         name,
         review,
       });
-      onReviewSubmit(); // Обновляем отзывы после отправки
+      onReviewSubmit();
     } catch (error) {
       console.error("Ошибка:", error);
     }

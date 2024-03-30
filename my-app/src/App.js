@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RedisForm from "./Components/RedisForm.jsx";
+import "./App.css";
 
 function ReviewsList({ reviews }) {
   return (
-    <div>
+    <div className="reviews">
       <h2>Отзывы:</h2>
       <ul>
         {reviews.map((review, index) => (
@@ -31,10 +32,10 @@ function App() {
 
   useEffect(() => {
     fetchReviews();
-  }, []); // Пустой массив зависимостей чтобы вызвать эффект только один раз
+  }, []);
 
   const handleReviewSubmit = () => {
-    fetchReviews(); // Обновляем отзывы после отправки нового отзыва
+    fetchReviews();
   };
 
   return (
